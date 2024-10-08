@@ -54,7 +54,7 @@ public class FileUtil {
         // Check if file exists; if not, download it
         if (!file.exists()) {
             System.out.println("File not found, downloading...");
-            downloadFile(FILE_URL, filePath);
+            downloadFile(filePath);
             System.out.println("File downloaded successfully.");
         }
 
@@ -88,12 +88,11 @@ public class FileUtil {
     /**
      * Downloads a file from the specified URL and saves it to the given file path.
      *
-     * @param fileUrl  the URL from which to download the file
      * @param savePath the path where the file should be saved
      * @throws IOException if an I/O error occurs during download
      */
-    private static void downloadFile(String fileUrl, Path savePath) throws IOException {
-        try (InputStream in = new URL(fileUrl).openStream()) {
+    private static void downloadFile(Path savePath) throws IOException {
+        try (InputStream in = new URL(FileUtil.FILE_URL).openStream()) {
             Files.createDirectories(savePath.getParent());  // Ensure parent directories exist
             Files.copy(in, savePath, StandardCopyOption.REPLACE_EXISTING);
         }
