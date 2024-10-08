@@ -3,7 +3,6 @@ package uno.soft.util;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
@@ -11,7 +10,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
+/**
+ * Utility class for file operations, specifically for reading and validating lines from a GZIP-compressed file.
+ * The class includes a method to read the file, validate each line, and return a list of valid lines.
+ */
 public class FileUtil {
+
+    /**
+     * Reads a GZIP-compressed file and returns a list of valid lines.
+     * Each line is checked using the {@link #isValidLine(String)} method.
+     * Only valid lines are included in the returned list.
+     *
+     * @return a list of valid lines from the file
+     * @throws IOException if an I/O error occurs while reading the file
+     */
     public static List<String> getLinesFromFile() throws IOException {
         File file = Path.of("file", "lng-4.txt.gz").toFile();
         System.out.println(file.exists());
@@ -32,28 +44,37 @@ public class FileUtil {
 
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                lines.add(line);
+                if (isValidLine(line)) {
+                    lines.add(line);
+                }
             }
         }
         return lines;
     }
 
     /**
-     * example:<br>
-     * <br>
-     * valid lines: <br>
-     * "111";"123";"222" <br>
-     * "200";"123";"100" <br>
-     * "300";"";"100" <br>
+     * Checks if a given line from a file is valid. A valid line must:
+     * <ul>
+     *     <li>Have an even number of double quotes (").</li>
+     *     <li>Each value must be enclosed in double quotes and separated by semicolons.</li>
+     * </ul>
      * <p>
-     * invalid lines <br>
-     * "8383"200000741652251" <br>
-     * "79855053897"83100000580443402";"200000133000191" <br>
+     * Example of valid lines:
+     * <pre>
+     * "111";"123";"222"
+     * "200";"123";"100"
+     * "300";"";"100"
+     * </pre>
+     * <p>
+     * Example of invalid lines:
+     * <pre>
+     * "8383"200000741652251"
+     * "79855053897"83100000580443402";"200000133000191"
+     * </pre>
      *
-     * @param line
-     * @return
+     * @param line the line to check for validity
+     * @return true if the line is valid, false otherwise
      */
-
     public static boolean isValidLine(String line) {
         // Check if the number of double quotes is even
         long quoteCount = line.chars().filter(ch -> ch == '"').count();
