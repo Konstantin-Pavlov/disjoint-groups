@@ -1,5 +1,7 @@
 package uno.soft.serviece;
 
+import uno.soft.util.ConsoleColors;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -14,6 +16,9 @@ public class LinesGrouper {
      */
     public List<Set<String>> groupLines(List<String> lines) {
         List<Set<String>> groups = new ArrayList<>();  // List of sets, each representing a group
+
+        int totalLines = lines.size();
+        int processedLines = 0;
 
         // Process each line
         for (String line : lines) {
@@ -35,8 +40,14 @@ public class LinesGrouper {
                 newGroup.add(line);
                 groups.add(newGroup);
             }
-        }
 
+            // Update progress
+            processedLines++;
+            int percentage = (processedLines * 100) / totalLines;
+            System.out.print(ConsoleColors.GREEN + "\rProcessing: " + percentage + "%" + ConsoleColors.RESET);
+
+        }
+        System.out.println(); // Move to the next line after completion
         return groups;  // Return all groups
     }
 
