@@ -1,6 +1,7 @@
 package uno.soft.serviece;
 
 import uno.soft.util.ConsoleColors;
+import uno.soft.util.ProgressTracker;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,9 +17,12 @@ public class LinesGrouper {
      */
     public List<Set<String>> groupLines(List<String> lines) {
         List<Set<String>> groups = new ArrayList<>();  // List of sets, each representing a group
-
         int totalLines = lines.size();
-        int processedLines = 0;
+
+        // Create and start the progress tracker
+        ProgressTracker progressTracker = new ProgressTracker(totalLines);
+        Thread progressThread = new Thread(progressTracker);
+        progressThread.start();
 
         // Process each line
         for (String line : lines) {
@@ -42,12 +46,16 @@ public class LinesGrouper {
             }
 
             // Update progress
-            processedLines++;
-            int percentage = (processedLines * 100) / totalLines;
-            System.out.print(ConsoleColors.GREEN + "\rProcessing: " + percentage + "%" + ConsoleColors.RESET);
-
+            progressTracker.incrementProcessedLines();
         }
-        System.out.println(); // Move to the next line after completion
+
+        // Stop the progress tracker
+        progressTracker.stop();
+        try {
+            progressThread.join(); // Wait for the progress thread to finish
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
         return groups;  // Return all groups
     }
 

@@ -4,12 +4,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ProgressTracker implements Runnable {
     private final int totalLines;
+    private int lastPercentage;
+    private String lastRemainingTimeStr;
     private final AtomicInteger processedLines;
     private final long startTime;
     private volatile boolean running;
 
     public ProgressTracker(int totalLines) {
         this.totalLines = totalLines;
+        this.lastPercentage = 0;
         this.processedLines = new AtomicInteger(0);
         this.startTime = System.nanoTime();
         this.running = true;
@@ -47,11 +50,12 @@ public class ProgressTracker implements Runnable {
             );
         }
         // Final update
+        System.out.println();
         long elapsedTime = (System.nanoTime() - startTime) / 1_000_000_000;
         String elapsedTimeStr = formatElapsedTime(elapsedTime);
         System.out.print(
                 ConsoleColors.GREEN_BACKGROUND +
-                        "\rProcessing: 100%, Time elapsed: " + elapsedTimeStr + ", Remaining time: 0s\n" +
+                        "Processing: 100%, Time elapsed: " + elapsedTimeStr + ", Remaining time: 0s\n" +
                         ConsoleColors.RESET
         );
     }
@@ -70,20 +74,27 @@ public class ProgressTracker implements Runnable {
     }
 
     private String calculateRemainingTime(long elapsedTime, int percentage) {
+        String result;
         if (percentage == 0) {
-            return "Calculating remaining time...";
-        }
-        long estimatedTotalTime = (elapsedTime * 100) / percentage;
-        long remainingTime = estimatedTotalTime - elapsedTime;
-        long remainingHours = remainingTime / 3600;
-        long remainingMinutes = (remainingTime % 3600) / 60;
-        long remainingSeconds = remainingTime % 60;
-        if (remainingHours > 0) {
-            return "Remaining time: " + remainingHours + "h " + remainingMinutes + "m " + remainingSeconds + "s";
-        } else if (remainingMinutes > 0) {
-            return "Remaining time: " + remainingMinutes + "m " + remainingSeconds + "s";
+            result = "Calculating remaining time...";
+        } else if (percentage > lastPercentage) {
+            lastPercentage = percentage;
+            long estimatedTotalTime = (elapsedTime * 100) / percentage;
+            long remainingTime = estimatedTotalTime - elapsedTime;
+            long remainingHours = remainingTime / 3600;
+            long remainingMinutes = (remainingTime % 3600) / 60;
+            long remainingSeconds = remainingTime % 60;
+            if (remainingHours > 0) {
+                result = "approximate remaining time: " + remainingHours + "h " + remainingMinutes + "m " + remainingSeconds + "s";
+            } else if (remainingMinutes > 0) {
+                result = "approximate remaining time: " + remainingMinutes + "m " + remainingSeconds + "s";
+            } else {
+                result = "approximate remaining time: " + remainingSeconds + "s";
+            }
+            lastRemainingTimeStr = result;
         } else {
-            return "Remaining time: " + remainingSeconds + "s";
+            result = lastRemainingTimeStr;
         }
+        return result;
     }
 }
