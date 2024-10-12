@@ -12,10 +12,12 @@ public class LinesGrouper {
 
     /**
      * Main method that takes a list of lines and returns groups of lines.
+     *
      * @param lines List of lines to be grouped.
      * @return List of grouped lines, where each group is represented as a Set of lines.
      */
     public List<Set<String>> groupLines(List<String> lines) {
+        Set<String> processedLines = new HashSet<>(); // store the lines that were already processed
         List<Set<String>> groups = new ArrayList<>();  // List of sets, each representing a group
         int totalLines = lines.size();
 
@@ -26,12 +28,16 @@ public class LinesGrouper {
 
         // Process each line
         for (String line : lines) {
+            if(processedLines.contains(line)) {
+                continue;
+            }
             String[] values = splitLine(line);  // Split line into values
             boolean addedToGroup = false;
 
             // Check if the line belongs to an existing group
             for (Set<String> group : groups) {
                 if (belongsToGroup(values, group)) {
+                    processedLines.add(line);
                     group.add(line);  // Add line to the group
                     addedToGroup = true;
                     break;
@@ -40,6 +46,7 @@ public class LinesGrouper {
 
             // If not added to any group, create a new group
             if (!addedToGroup) {
+                processedLines.add(line);
                 Set<String> newGroup = new HashSet<>();
                 newGroup.add(line);
                 groups.add(newGroup);
@@ -61,6 +68,7 @@ public class LinesGrouper {
 
     /**
      * Splits a line by the semicolon delimiter and trims any surrounding quotes.
+     *
      * @param line Line to be split.
      * @return Array of values from the line.
      */
@@ -75,8 +83,9 @@ public class LinesGrouper {
 
     /**
      * Checks whether a line's values belong to a given group.
+     *
      * @param values Array of values from the current line.
-     * @param group Set of lines in the group.
+     * @param group  Set of lines in the group.
      * @return True if the line shares any value with lines in the group.
      */
     private boolean belongsToGroup(String[] values, Set<String> group) {
@@ -91,6 +100,7 @@ public class LinesGrouper {
 
     /**
      * Checks if two lines share at least one value in the same column.
+     *
      * @param values1 Values from the first line.
      * @param values2 Values from the second line.
      * @return True if there is a shared value in the same column.
