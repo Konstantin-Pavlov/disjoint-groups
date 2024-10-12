@@ -1,6 +1,9 @@
 package uno.soft;
 
+import uno.soft.serviece.EffectiveLineGrouper;
 import uno.soft.serviece.LinesGrouper;
+import uno.soft.serviece.LinesGrouperWith4Threads;
+import uno.soft.serviece.LinesGrouperWithMaxThreads;
 import uno.soft.util.ConsoleColors;
 import uno.soft.util.FileUtil;
 
@@ -11,8 +14,6 @@ import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String[] args) {
-
-
 
         List<String> lines;
         try {
@@ -29,10 +30,16 @@ public class Main {
 //        lines.stream().limit(25).forEach(System.out::println);
 
         LinesGrouper linesGrouper = new LinesGrouper();
+        LinesGrouperWith4Threads linesGrouperWith4Threads = new LinesGrouperWith4Threads();
+        LinesGrouperWithMaxThreads linesGrouperWithMaxThreads = new LinesGrouperWithMaxThreads();
+        EffectiveLineGrouper effectiveLineGrouper = new EffectiveLineGrouper();
 
         List<String> testSubList = lines.subList(0, 100001);
 
-        List<Set<String>> groups = linesGrouper.groupLines(testSubList);
+//        List<Set<String>> groups = linesGrouper.groupLines(lines);
+//        List<Set<String>> groups = linesGrouperWith4Threads.groupLines(testSubList);
+//        List<Set<String>> groups = linesGrouperWithMaxThreads.groupLines(testSubList);
+        List<List<String>> groups = effectiveLineGrouper.findLineGroups(lines);
 
 
         long endTime = System.nanoTime(); // End time measurement
@@ -41,7 +48,7 @@ public class Main {
         String formattedDuration = getFormattedDuration(duration);
 
         System.out.println(ConsoleColors.ANSI_CYAN + "Execution time: " + formattedDuration + ConsoleColors.RESET); // Print formatted duration
-        System.out.println(ConsoleColors.ANSI_CYAN + "number of lines: " + testSubList.size() + ConsoleColors.RESET);
+        System.out.println(ConsoleColors.ANSI_CYAN + "number of lines: " + lines.size() + ConsoleColors.RESET);
         System.out.println(ConsoleColors.ANSI_CYAN + "number of groups total: " + groups.size() + ConsoleColors.RESET);
 
         long count = groups.stream()
