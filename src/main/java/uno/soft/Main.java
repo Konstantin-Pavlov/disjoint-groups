@@ -1,6 +1,6 @@
 package uno.soft;
 
-import uno.soft.serviece.EffectiveLineGrouper;
+import uno.soft.serviece.EffectiveGrouper;
 import uno.soft.serviece.LinesGrouper;
 import uno.soft.serviece.LinesGrouperWith4Threads;
 import uno.soft.serviece.LinesGrouperWithMaxThreads;
@@ -9,7 +9,6 @@ import uno.soft.util.FileUtil;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
@@ -32,14 +31,14 @@ public class Main {
         LinesGrouper linesGrouper = new LinesGrouper();
         LinesGrouperWith4Threads linesGrouperWith4Threads = new LinesGrouperWith4Threads();
         LinesGrouperWithMaxThreads linesGrouperWithMaxThreads = new LinesGrouperWithMaxThreads();
-        EffectiveLineGrouper effectiveLineGrouper = new EffectiveLineGrouper();
+        EffectiveGrouper effectiveGrouper = new EffectiveGrouper();
 
         List<String> testSubList = lines.subList(0, 100001);
 
 //        List<Set<String>> groups = linesGrouper.groupLines(lines);
 //        List<Set<String>> groups = linesGrouperWith4Threads.groupLines(testSubList);
 //        List<Set<String>> groups = linesGrouperWithMaxThreads.groupLines(testSubList);
-        List<List<String>> groups = effectiveLineGrouper.findLineGroups(lines);
+        List<List<String>> groups = effectiveGrouper.findLineGroups(lines);
 
 
         long endTime = System.nanoTime(); // End time measurement

@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class LinesGrouperTest {
+class LinesEffectiveGrouperTest {
 
     private static LinesGrouper grouper;
     private static List<String> lines;

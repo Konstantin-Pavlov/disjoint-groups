@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-public class EffectiveLineGrouper {
+public class EffectiveGrouper {
 
     public  List<List<String>> findLineGroups(List<String> lines) {
         class NewLineElement {
