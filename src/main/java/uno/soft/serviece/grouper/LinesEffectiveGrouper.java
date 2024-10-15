@@ -39,6 +39,7 @@ public class LinesEffectiveGrouper {
         List<Set<String>> groups = new ArrayList<>();
         Map<ElementWithColumnPosition, Set<ElementFullInfo>> elementsMap = new HashMap<>();
         Map<String, LineTracker> lineTrackerMap = new HashMap<>();
+        ElementWithColumnPosition elementWithColumnPosition = null;
         int lineIndex = 0;
 
         for (String line : lines) {
@@ -53,7 +54,9 @@ public class LinesEffectiveGrouper {
 
                 //todo first - element represents also its column index in elementsMap!!! (done)
 
-                ElementWithColumnPosition elementWithColumnPosition = new ElementWithColumnPosition(element, columnIndex);
+                // todo - add line to lineTrackerMap before this if; in case else (elementsMap contains element, than add to lineTrackerMap)
+
+                elementWithColumnPosition = new ElementWithColumnPosition(element, columnIndex);
                 // make sure lines share one element have the same uuid
                 if (!elementsMap.containsKey(elementWithColumnPosition)) {
                     UUID uuid = UUID.randomUUID();
@@ -61,13 +64,7 @@ public class LinesEffectiveGrouper {
                     set.add(new ElementFullInfo(uuid, line, lineIndex, columnIndex));
                     elementsMap.put(elementWithColumnPosition, set);
 
-//                    if (!lineTrackerMap.containsKey(line)) {
-//                        LineTracker lineTracker = new LineTracker(line);
-//                        lineTracker.getElementUuidsSetLineBelongsTo().add(uuid);
-//                        lineTrackerMap.put(line, lineTracker);
-//                    } else {
-//                        lineTrackerMap.get(line).getElementUuidsSetLineBelongsTo().add(uuid);
-//                    }
+
 
                 } else {
                     Optional<ElementFullInfo> first = elementsMap.get(elementWithColumnPosition).stream().findFirst();
@@ -75,31 +72,42 @@ public class LinesEffectiveGrouper {
                         UUID uuid = first.get().getUuid();
                         Objects.requireNonNull(elementsMap.get(elementWithColumnPosition)).add(new ElementFullInfo(uuid, line, lineIndex, columnIndex));
 
-//                        if (!lineTrackerMap.containsKey(line)) {
-//                            LineTracker lineTracker = new LineTracker(line);
-//                            lineTracker.getElementUuidsSetLineBelongsTo().add(uuid);
-//                            lineTrackerMap.put(line, lineTracker);
-//                        } else {
-//                            lineTrackerMap.get(line).getElementUuidsSetLineBelongsTo().add(uuid);
-//                        }
 
                     } else {
                         throw new IllegalArgumentException("Element " + element + " not found");
                     }
                 }
 
+
+
 //                elementsMap.computeIfAbsent(element, k -> new HashSet<>()).add(new Element(uuid, line, lineIndex, columnIndex));
 
-                // todo second - after: fix; we add to LineTracker every element UUID in line, it's wrong
-//                if (lineTrackerMap.containsKey(line)) {
-//                    lineTrackerMap.get(line).getElementUuidsSetLineBelongsTo().add(uuid);
-//                } else {
-//                    LineTracker lineTracker = new LineTracker(line);
-//                    lineTracker.getElementUuidsSetLineBelongsTo().add(uuid);
-//                    lineTrackerMap.put(line, lineTracker);
-//                }
+
+
+
+                if (lineTrackerMap.containsKey(line)) {
+                    lineTrackerMap.get(line).getElementWithColumnPositionsSet().add(elementWithColumnPosition);
+                } else {
+                    LineTracker lineTracker = new LineTracker(line);
+                    lineTracker.getElementWithColumnPositionsSet().add(elementWithColumnPosition);
+                    lineTrackerMap.put(line, lineTracker);
+                }
 
             }
+
+            LineTracker lineTracker = new LineTracker(line);
+            lineTracker.getElementWithColumnPositionsSet().add(elementWithColumnPosition);
+            lineTrackerMap.put(line, lineTracker);
+
+            for (Map.Entry<ElementWithColumnPosition, Set<ElementFullInfo>> elementWithColumnPositionSetEntry : elementsMap.entrySet()) {
+                for (ElementFullInfo elementFullInfo : elementWithColumnPositionSetEntry.getValue()) {
+                    if(elementFullInfo.getLineElementBelongsTo().equalsIgnoreCase(line)) {
+                        lineTracker.getElementWithColumnPositionsSet().add(elementWithColumnPosition);
+                    }
+                }
+            }
+
+
             lineIndex++;
         }
 

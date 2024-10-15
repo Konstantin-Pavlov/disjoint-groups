@@ -5,16 +5,15 @@ import lombok.Getter;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 @Getter
 @EqualsAndHashCode
 public class LineTracker {
     private final String line;
-    private final Set<UUID> elementUuidsSetLineBelongsTo;
+    private final Set<ElementWithColumnPosition> elementWithColumnPositionsSet;
 
     public LineTracker(String line) {
-        this.elementUuidsSetLineBelongsTo = new HashSet<>();
+        this.elementWithColumnPositionsSet = new HashSet<>();
         this.line = line;
     }
 }
