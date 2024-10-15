@@ -15,22 +15,29 @@ import java.util.UUID;
 public class LinesEffectiveGrouper {
 
     public static void main(String[] args) {
+//        List<String> lines = Arrays.asList(
+//                "\"111\";\"123\";\"222\"",
+//                "\"200\";\"123\";\"100\"",
+//                "\"300\";;\"100\"",
+//                "\"400\";\"456\";\"300\"",
+//                "\"300\";\"556\";\"101\""
+//        );
+
         List<String> lines = Arrays.asList(
                 "\"111\";\"123\";\"222\"",
                 "\"200\";\"123\";\"100\"",
                 "\"300\";;\"100\"",
-                "\"400\";\"456\";\"300\"",
-                "\"300\";\"556\";\"101\""
+                "\"400\";\"456\";\"300\""
         );
 
         groupLines(lines);
 
     }
 
-    // todo - add collection to track what groups line belongs
+
     public static List<Set<String>> groupLines(List<String> lines) {
         List<Set<String>> groups = new ArrayList<>();
-        Map<String, Set<Element>> elementsMap = new HashMap<>();
+        Map<ElementWithColumnPosition, Set<ElementFullInfo>> elementsMap = new HashMap<>();
         Map<String, LineTracker> lineTrackerMap = new HashMap<>();
         int lineIndex = 0;
 
@@ -44,26 +51,46 @@ public class LinesEffectiveGrouper {
                 }
 
 
-                //todo - element represents also its column index in elementsMap
+                //todo first - element represents also its column index in elementsMap!!! (done)
 
+                ElementWithColumnPosition elementWithColumnPosition = new ElementWithColumnPosition(element, columnIndex);
                 // make sure lines share one element have the same uuid
-                if (!elementsMap.containsKey(element)) {
+                if (!elementsMap.containsKey(elementWithColumnPosition)) {
                     UUID uuid = UUID.randomUUID();
-                    HashSet<Element> set = new HashSet<>();
-                    set.add(new Element(uuid, line, lineIndex, columnIndex));
-                    elementsMap.put(element, set);
+                    HashSet<ElementFullInfo> set = new HashSet<>();
+                    set.add(new ElementFullInfo(uuid, line, lineIndex, columnIndex));
+                    elementsMap.put(elementWithColumnPosition, set);
+
+//                    if (!lineTrackerMap.containsKey(line)) {
+//                        LineTracker lineTracker = new LineTracker(line);
+//                        lineTracker.getElementUuidsSetLineBelongsTo().add(uuid);
+//                        lineTrackerMap.put(line, lineTracker);
+//                    } else {
+//                        lineTrackerMap.get(line).getElementUuidsSetLineBelongsTo().add(uuid);
+//                    }
+
                 } else {
-                    Optional<Element> first = elementsMap.get(element).stream().findFirst();
+                    Optional<ElementFullInfo> first = elementsMap.get(elementWithColumnPosition).stream().findFirst();
                     if (first.isPresent()) {
                         UUID uuid = first.get().getUuid();
-                        Objects.requireNonNull(elementsMap.get(element)).add(new Element(uuid, line, lineIndex, columnIndex));
+                        Objects.requireNonNull(elementsMap.get(elementWithColumnPosition)).add(new ElementFullInfo(uuid, line, lineIndex, columnIndex));
+
+//                        if (!lineTrackerMap.containsKey(line)) {
+//                            LineTracker lineTracker = new LineTracker(line);
+//                            lineTracker.getElementUuidsSetLineBelongsTo().add(uuid);
+//                            lineTrackerMap.put(line, lineTracker);
+//                        } else {
+//                            lineTrackerMap.get(line).getElementUuidsSetLineBelongsTo().add(uuid);
+//                        }
+
                     } else {
                         throw new IllegalArgumentException("Element " + element + " not found");
                     }
                 }
 
 //                elementsMap.computeIfAbsent(element, k -> new HashSet<>()).add(new Element(uuid, line, lineIndex, columnIndex));
-                // todo - after: fix; we add to LineTracker every element UUID in line, it's wrong
+
+                // todo second - after: fix; we add to LineTracker every element UUID in line, it's wrong
 //                if (lineTrackerMap.containsKey(line)) {
 //                    lineTrackerMap.get(line).getElementUuidsSetLineBelongsTo().add(uuid);
 //                } else {
@@ -76,10 +103,10 @@ public class LinesEffectiveGrouper {
             lineIndex++;
         }
 
-        for (Map.Entry<String, Set<Element>> entry : elementsMap.entrySet()) {
-            if (entry.getValue().size() > 1) {
-            }
-        }
+//        for (Map.Entry<String, Set<ElementFullInfo>> entry : elementsMap.entrySet()) {
+//            if (entry.getValue().size() > 1) {
+//            }
+//        }
 
         return groups;
     }

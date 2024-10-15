@@ -9,7 +9,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode
-public class Element {
+public class ElementFullInfo {
     private UUID uuid;
     private String lineElementBelongsTo;
     private int lineIndex;

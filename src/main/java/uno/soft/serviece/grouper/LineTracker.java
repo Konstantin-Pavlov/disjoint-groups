@@ -10,8 +10,8 @@ import java.util.UUID;
 @Getter
 @EqualsAndHashCode
 public class LineTracker {
-    private String line;
-    private Set<UUID> elementUuidsSetLineBelongsTo;
+    private final String line;
+    private final Set<UUID> elementUuidsSetLineBelongsTo;
 
     public LineTracker(String line) {
         this.elementUuidsSetLineBelongsTo = new HashSet<>();
