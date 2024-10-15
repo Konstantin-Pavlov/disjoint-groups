@@ -1,7 +1,8 @@
-package uno.soft.serviece;
+package uno.soft.service;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import uno.soft.service.slow_and_correct.LinesGrouper;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class LinesGrouperTest {
+class LinesEffectiveGrouperTest {
 
     private static LinesGrouper grouper;
     private static List<String> lines;
