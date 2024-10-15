@@ -1,6 +1,5 @@
-package uno.soft.serviece;
+package uno.soft.service.slow_and_correct;
 
-import uno.soft.util.ConsoleColors;
 import uno.soft.util.ProgressTracker;
 
 import java.util.ArrayList;

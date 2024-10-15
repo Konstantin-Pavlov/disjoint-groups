@@ -1,4 +1,4 @@
-package uno.soft.serviece.grouper;
+package uno.soft.service.fast_and_not_correct;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

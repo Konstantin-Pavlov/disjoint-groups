@@ -1,17 +1,13 @@
-package uno.soft.serviece;
+package uno.soft.service.slow_and_correct;
 
-import uno.soft.util.ConsoleColors;
 import uno.soft.util.ProgressTracker;
 
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
-public class LinesGrouperWithMaxThreads {
+public class LinesGrouperWith4Threads {
     /**
      * Main method that takes a list of lines and returns groups of lines.
      *
@@ -28,32 +24,37 @@ public class LinesGrouperWithMaxThreads {
         Thread progressThread = new Thread(progressTracker);
         progressThread.start();
 
-        // Determine the number of available processors
-        int availableProcessors = Runtime.getRuntime().availableProcessors();
-        int chunkSize = (int) Math.ceil((double) totalLines / availableProcessors);
+        // Split the lines into two halves
+        List<String> l1 = lines.subList(0, totalLines / 4);
+        List<String> l2 = lines.subList(totalLines / 4, totalLines / 2);
+        List<String> l3 = lines.subList(totalLines / 2, totalLines / 2 + totalLines / 4);
+        List<String> l4 = lines.subList(totalLines / 2 + totalLines / 4, totalLines);
 
-        System.out.println(ConsoleColors.ANSI_BLUE + "Available processors (cores): " + availableProcessors + ConsoleColors.RESET);
+        // Create tasks for processing each half
+        Runnable task1 = () -> processLines(l1, processedLines, groups, progressTracker);
+        Runnable task2 = () -> processLines(l2, processedLines, groups, progressTracker);
+        Runnable task3 = () -> processLines(l3, processedLines, groups, progressTracker);
+        Runnable task4 = () -> processLines(l4, processedLines, groups, progressTracker);
 
-        // Create a thread pool
-        try(ExecutorService executorService = Executors.newFixedThreadPool(availableProcessors);){
-            // Create tasks for processing each chunk
-            for (int i = 0; i < availableProcessors; i++) {
-                int start = i * chunkSize;
-                int end = Math.min(start + chunkSize, totalLines);
-                List<String> chunk = lines.subList(start, end);
-                executorService.submit(() -> processLines(chunk, processedLines, groups, progressTracker));
-            }
+        // Start the threads
+        Thread thread1 = new Thread(task1);
+        Thread thread2 = new Thread(task2);
+        Thread thread3 = new Thread(task3);
+        Thread thread4 = new Thread(task4);
+        thread1.start();
+        thread2.start();
+        thread3.start();
+        thread4.start();
 
-            // Shutdown the executor service and wait for tasks to complete
-            executorService.shutdown();
-            try {
-                executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
+        // Wait for both threads to finish
+        try {
+            thread1.join();
+            thread2.join();
+            thread3.join();
+            thread4.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
-
-
 
         // Stop the progress tracker
         progressTracker.stop();

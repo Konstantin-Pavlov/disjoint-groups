@@ -1,9 +1,9 @@
 package uno.soft;
 
-import uno.soft.serviece.EffectiveGrouper;
-import uno.soft.serviece.LinesGrouper;
-import uno.soft.serviece.LinesGrouperWith4Threads;
-import uno.soft.serviece.LinesGrouperWithMaxThreads;
+import uno.soft.service.fast_and_correct.EffectiveGrouper;
+import uno.soft.service.slow_and_correct.LinesGrouper;
+import uno.soft.service.slow_and_correct.LinesGrouperWith4Threads;
+import uno.soft.service.slow_and_correct.LinesGrouperWithMaxThreads;
 import uno.soft.util.ConsoleColors;
 import uno.soft.util.FileUtil;
 
@@ -31,6 +31,7 @@ public class Main {
         LinesGrouper linesGrouper = new LinesGrouper();
         LinesGrouperWith4Threads linesGrouperWith4Threads = new LinesGrouperWith4Threads();
         LinesGrouperWithMaxThreads linesGrouperWithMaxThreads = new LinesGrouperWithMaxThreads();
+
         EffectiveGrouper effectiveGrouper = new EffectiveGrouper();
 
         List<String> testSubList = lines.subList(0, 100001);
@@ -38,6 +39,7 @@ public class Main {
 //        List<Set<String>> groups = linesGrouper.groupLines(lines);
 //        List<Set<String>> groups = linesGrouperWith4Threads.groupLines(testSubList);
 //        List<Set<String>> groups = linesGrouperWithMaxThreads.groupLines(testSubList);
+
         List<List<String>> groups = effectiveGrouper.findLineGroups(lines);
 
 
@@ -66,7 +68,6 @@ public class Main {
         long milliseconds = TimeUnit.NANOSECONDS.toMillis(duration) % 1000;
 
         // Format the execution time
-        String formattedDuration = String.format("%02dh:%02dm:%02ds:%03dms", hours, minutes, seconds, milliseconds);
-        return formattedDuration;
+        return String.format("%02dh:%02dm:%02ds:%03dms", hours, minutes, seconds, milliseconds);
     }
 }

@@ -1,7 +1,8 @@
-package uno.soft.serviece;
+package uno.soft.service;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import uno.soft.service.slow_and_correct.LinesGrouper;
 
 import java.util.Arrays;
 import java.util.Collections;
