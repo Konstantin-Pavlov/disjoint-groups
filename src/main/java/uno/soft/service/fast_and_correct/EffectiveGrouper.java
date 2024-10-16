@@ -66,8 +66,9 @@ public class EffectiveGrouper {
                 // If the element already belongs to a group, add that group number to the set of matching groups.
                 if (elementGroupNumber != null) {
                     // If the element's group has been merged with another, follow the chain to find the final group.
-                    while (unitedGroups.containsKey(elementGroupNumber))
+                    if (unitedGroups.containsKey(elementGroupNumber)) {
                         elementGroupNumber = unitedGroups.get(elementGroupNumber); // Get the final group number after merging
+                    }
                     groupsWithSameElements.add(elementGroupNumber); // Add the final group number to the set.
                 } else {
                     // If the element is new (not assigned to any group yet), add it to the newElements list.
