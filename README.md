@@ -23,10 +23,6 @@
 </details>
 
 
-
-    
-
-
 ### Step 3: Launch the Project with Command-Line Arguments
 
 - **With a .txt file path**: You can specify the path to a `.txt` file in the command-line arguments. Replace `C:\Users\user\Desktop\java\lng.txt` with your actual file path:
@@ -70,7 +66,9 @@
 
 
 
-## Задание
+<details>
+  <summary><strong style="font-size: 24px;">Задание (Russian)</strong></summary>
+
 С помощью Java:
 
 1. Считать файл (https://github.com/PeacockTeam/new-job/releases/download/v1.0/lng-4.txt.gz), состоящий из строк вида 
@@ -142,3 +140,78 @@ A3;B3
 
 2. Если в группе две одинаковых строки - нужно оставить одну
 
+</details>
+
+
+<details>
+  <summary><strong style="font-size: 24px;">Task (English)</strong></summary>
+
+Using Java:
+
+1. Read a file (https://github.com/PeacockTeam/new-job/releases/download/v1.0/lng-4.txt.gz) consisting of lines in the following format:
+
+```
+A1;B1;C1
+A2;B2;C2
+A3;B3
+...
+```
+> [!NOTE]
+> Each line may contain an unlimited number of elements.
+
+2. Find a set of unique lines and divide it into non-overlapping groups based on the following criterion:
+> If two lines have non-empty matching values in one or more columns, they belong to the same group.
+
+For example, the lines:
+```
+111;123;222
+200;123;100
+300;;100
+```
+all belong to the same group, as the first two lines have the same value of 123 in the second column, and the last two have the same value of 100 in the third column.
+
+The lines:
+```
+100;200;300
+200;300;100
+```
+should not be in the same group, as the value 200 is in different columns.
+
+3. Output the resulting groups to a file in the following format:
+
+```
+Group 1
+line1
+line2
+line3
+...
+
+Group 2 
+line1
+line2
+line3
+```
+
+- At the beginning of the output, indicate the number of groups with more than one element.
+- Groups with the largest number of elements should be listed first.
+
+4. After completing the task, you must submit the number of groups with more than one element and the execution time of the program (we do not check the code if the answer is incorrect).
+5. The code must be uploaded to GitHub or GitLab.
+
+## Requirements
+1. Acceptable execution time - up to 30 seconds.
+2. The project should be built using Maven or Gradle into an executable JAR.
+3. The JAR should be run as follows: `java -jar {project-name}.jar test-file.txt`
+4. The algorithm must not consume more than 1GB of memory (run with memory limit `-Xmx1G`).
+
+## Note
+1. Lines like:
+  ```
+   "8383"200000741652251"
+   "79855053897"83100000580443402";"200000133000191"
+  ```
+  are invalid and should be skipped.
+
+2. If there are duplicate lines in a group, only one should be retained.
+
+</details>
