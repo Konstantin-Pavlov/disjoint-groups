@@ -1,3 +1,49 @@
+Here's an updated `README.md` section with the instructions:
+
+---
+
+## How to Launch the Project
+
+### Step 1: Navigate to the Project Root Directory
+- Make sure you're in the root directory of the project where the `pom.xml` file is located.
+
+### Step 2: Compile the Project
+
+- To compile the project, use Maven with the following command:
+    ```
+    mvn clean package
+    ```
+
+### Step 3: Launch the Project with Command-Line Arguments
+
+- **With a .txt file path**: You can specify the path to a `.txt` file in the command-line arguments. Replace `C:\Users\user\Desktop\java\lng.txt` with your actual file path:
+  ```
+  java -jar target/disjoint-groups-1.0-SNAPSHOT.jar C:\Users\user\Desktop\java\lng.txt
+  ```
+
+- **Without command-line arguments**: If no file path is provided, the `.gz` archive will be automatically downloaded (and then processed)from the following link:
+  ```
+  https://github.com/PeacockTeam/new-job/releases/download/v1.0/lng-4.txt.gz
+  ```
+ -  Example command to run without arguments:
+  ```
+  java -jar target/disjoint-groups-1.0-SNAPSHOT.jar
+  ```
+
+### Step 4: Launch with Memory Limit
+- You can limit the memory usage of the project to 1GB by using the `-Xmx` option. For example:
+    ```
+    java -Xmx1G -jar target/disjoint-groups-1.0-SNAPSHOT.jar C:\Users\user\Desktop\java\lng.txt
+    ```
+- or without arguments:
+    ```
+    java -Xmx1G -jar target/disjoint-groups-1.0-SNAPSHOT.jar
+    ```
+
+---
+
+
+
 ## Задание
 С помощью Java:
 
