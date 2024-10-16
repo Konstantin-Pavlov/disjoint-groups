@@ -43,7 +43,7 @@ public class FileUtilTest {
     }
 
     @Test
-    void testGetLinesFromFile() throws IOException {
+    void testGetLinesFromGZIPFile() throws IOException {
         // Mock the BufferedReader to simulate file reading
         BufferedReader mockBufferedReader = Mockito.mock(BufferedReader.class);
 
