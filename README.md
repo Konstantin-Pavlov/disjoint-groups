@@ -1,4 +1,4 @@
-Here's an updated `README.md` section with the instructions:
+
 
 ---
 
@@ -13,6 +13,19 @@ Here's an updated `README.md` section with the instructions:
     ```
     mvn clean package
     ```
+<details>
+  <summary>Screenshots of running this command</summary>
+  
+  <br> <!-- This line break helps separate the summary from the images -->
+
+  ![Screenshot of the command](https://github.com/user-attachments/assets/5ea049d5-5581-4712-b01d-450dae942a49)
+
+</details>
+
+
+
+    
+
 
 ### Step 3: Launch the Project with Command-Line Arguments
 
@@ -39,6 +52,19 @@ Here's an updated `README.md` section with the instructions:
     ```
     java -Xmx1G -jar target/disjoint-groups-1.0-SNAPSHOT.jar
     ```
+
+<details>
+  <summary>Screenshots of running the program with different arguments</summary>
+
+  <br> <!-- This line break helps separate the summary from the images -->
+
+  ![Screenshot 1](https://github.com/user-attachments/assets/eb956860-bb22-4991-ad16-1cd717d7e71a)
+  ![Screenshot 2](https://github.com/user-attachments/assets/6d6f530a-b928-41e3-a628-d37a7a01094f)
+
+</details>
+
+
+
 
 ---
 
