@@ -6,7 +6,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -47,7 +49,7 @@ public class FileUtil {
      * @return a list of valid lines from the file
      * @throws IOException if an I/O error occurs while reading or downloading the file
      */
-    public static List<String> getLinesFromFile() throws IOException {
+    public static List<String> getLinesFromGZIPFile() throws IOException {
         Path filePath = Paths.get(FILE_FOLDER, FILE_NAME);
         File file = filePath.toFile();
 
@@ -58,10 +60,10 @@ public class FileUtil {
             System.out.println("File downloaded successfully.");
         }
 
-        System.out.println("File exists: " + file.exists());
-        System.out.println("Can read file: " + file.canRead());
-        System.out.println("File name: " + file.getName());
-        System.out.println("file absolute path: " + file.getAbsolutePath());
+        fileCheck(file, filePath);
+
+        infoMessage(file);
+
         List<String> lines = new ArrayList<>();
 
         /*
@@ -85,6 +87,74 @@ public class FileUtil {
         return lines;
     }
 
+
+    /**
+     * Reads a text file and returns a list of valid lines.
+     *
+     * @param filePath the path to the text file
+     * @return a list of valid lines from the file
+     * @throws IOException if an I/O error occurs while reading the file
+     */
+    public static List<String> getLinesFromTxtFile(String filePath) throws IOException {
+        Path path = Paths.get(filePath);
+        File file = path.toFile();
+
+        fileCheck(file, path);
+
+        infoMessage(file);
+
+        List<String> lines = new ArrayList<>();
+
+        /*
+         * FileInputStream: Reads raw bytes from the file.
+         * InputStreamReader: Converts the bytes into characters.
+         * BufferedReader: Buffers the characters for efficient reading and provides convenient methods like readLine().
+         */
+        try (FileInputStream fileInputStream = new FileInputStream(file);
+             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+             BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
+
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                if (isValidLine(line)) {
+                    lines.add(line);
+                }
+            }
+        }
+        return lines;
+    }
+
+    /**
+     * Checks if a file exists and is readable.
+     *
+     * @param file     the file to check
+     * @param filePath the path to the file
+     * @throws IOException if the file does not exist or cannot be read
+     */
+    private static void fileCheck(File file, Path filePath) throws IOException {
+        // Check if file exists
+        if (!file.exists()) {
+            throw new IOException("File not found: " + filePath);
+        }
+
+        // Check if file is readable
+        if (!file.canRead()) {
+            throw new IOException("File cannot be read: " + filePath);
+        }
+    }
+
+    /**
+     * Prints information about a file.
+     *
+     * @param file the file to print information about
+     */
+    private static void infoMessage(File file) {
+        System.out.println("File exists: " + file.exists());
+        System.out.println("Can read file: " + file.canRead());
+        System.out.println("File name: " + file.getName());
+        System.out.println("file absolute path: " + file.getAbsolutePath());
+    }
+
     /**
      * Downloads a file from the specified URL and saves it to the given file path.
      *
@@ -92,9 +162,11 @@ public class FileUtil {
      * @throws IOException if an I/O error occurs during download
      */
     private static void downloadFile(Path savePath) throws IOException {
-        try (InputStream in = new URL(FileUtil.FILE_URL).openStream()) {
+        try (InputStream in = new URI(FileUtil.FILE_URL).toURL().openStream()) {
             Files.createDirectories(savePath.getParent());  // Ensure parent directories exist
             Files.copy(in, savePath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (MalformedURLException | URISyntaxException e) {
+            throw new IOException("Invalid URL: " + FileUtil.FILE_URL, e);
         }
     }
 
