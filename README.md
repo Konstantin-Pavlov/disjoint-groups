@@ -147,7 +147,7 @@ A3;B3
 
 далее попробовать с большим [.csv файлом](https://github.com/PeacockTeam/new-job/releases/download/v1.0/lng-big.7z)
 
-Результат должен быть такой: 
+Вывод должен быть такой: 
 <br>
 ![image](https://github.com/user-attachments/assets/b587a2a3-01cb-4edc-8c49-9adbcd1a1a66)
 
