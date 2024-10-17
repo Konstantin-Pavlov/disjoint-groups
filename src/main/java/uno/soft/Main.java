@@ -5,6 +5,8 @@ import uno.soft.util.ConsoleColors;
 import uno.soft.util.FileUtil;
 
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -14,17 +16,32 @@ public class Main {
 
         List<String> lines;
 
+        // Access JVM arguments
+        RuntimeMXBean runtimeMxBean = ManagementFactory.getRuntimeMXBean();
+        List<String> jvmArgs = runtimeMxBean.getInputArguments();
+        if (!jvmArgs.isEmpty()) {
+            System.out.println(ConsoleColors.YELLOW_BACKGROUND + "The project has been launched with JVM Arguments: " + jvmArgs + ConsoleColors.RESET);
+        } else {
+            System.out.println(ConsoleColors.YELLOW_BACKGROUND + "The project has been launched without JVM Arguments" + ConsoleColors.RESET);
+        }
+
         if (args.length > 0) {
-            System.out.println(ConsoleColors.ANSI_PURPLE + "Project has been launched with command line arguments" + ConsoleColors.ANSI_RESET);
+            System.out.println(ConsoleColors.ANSI_PURPLE + "The project has been launched with command line arguments" + ConsoleColors.ANSI_RESET);
             System.out.println(ConsoleColors.BLUE_BOLD + "Arguments: " + Arrays.toString(args) + ConsoleColors.RESET);
+            String filePathAndName = args[0];
+            if (filePathAndName.endsWith(".csv")) {
+                System.out.println(ConsoleColors.BLUE + "we will try to read .csv file; path to file: " + filePathAndName + ConsoleColors.RESET);
+            } else if (filePathAndName.endsWith(".txt")) {
+                System.out.println(ConsoleColors.BLUE + "we will try to read .txt file; path to file: " + filePathAndName + ConsoleColors.RESET);
+            }
             try {
-                lines = FileUtil.getLinesFromTxtFile(args[0]);
+                lines = FileUtil.getLinesFromFile(args[0]);
             } catch (IOException e) {
                 System.err.println(ConsoleColors.RED_BACKGROUND + "Error reading file -> " + e.getMessage() + ConsoleColors.RESET);
                 return;
             }
         } else {
-            System.out.println(ConsoleColors.ANSI_PURPLE + "Project has been launched without command line arguments" + ConsoleColors.ANSI_RESET);
+            System.out.println(ConsoleColors.ANSI_PURPLE + "The project has been launched without command line arguments" + ConsoleColors.ANSI_RESET);
             try {
                 lines = FileUtil.getLinesFromGZIPFile();
             } catch (IOException e) {
@@ -32,6 +49,8 @@ public class Main {
                 return;
             }
         }
+
+//        lines = FileUtil.getLinesFromFile("C:\\Users\\user\\Desktop\\java\\lng-big.csv");
 
         long startTime = System.nanoTime(); // Start time measurement
 

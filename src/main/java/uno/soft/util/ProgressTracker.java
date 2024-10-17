@@ -45,7 +45,7 @@ public class ProgressTracker implements Runnable {
 
             System.out.print(
                     ConsoleColors.GREEN +
-                            "\rProcessing: " + percentage + "%, Time elapsed: " + elapsedTimeStr + ", " + remainingTimeStr +
+                            "\rProcessing: " + percentage + "%, line: " + processedLines.get() +  ", Time elapsed: " + elapsedTimeStr + ", " + remainingTimeStr +
                             ConsoleColors.RESET
             );
         }
@@ -55,7 +55,7 @@ public class ProgressTracker implements Runnable {
         String elapsedTimeStr = formatElapsedTime(elapsedTime);
         System.out.print(
                 ConsoleColors.GREEN_BACKGROUND +
-                        "Processing: 100%, Time elapsed: " + elapsedTimeStr + ", Remaining time: 0s" +
+                        "Processing: 100%, line: " + processedLines.get() +  ", Time elapsed: " + elapsedTimeStr +
                         ConsoleColors.RESET + "\n"
         );
     }
