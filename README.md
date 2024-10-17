@@ -74,8 +74,9 @@
   <summary><strong style="font-size: 24px;">Задание (Russian)</strong></summary>
 
 С помощью Java:
+ 
 
-1. Считать файл (https://github.com/PeacockTeam/new-job/releases/download/v1.0/lng-4.txt.gz), состоящий из строк вида 
+1. Считать файл [файл](https://github.com/PeacockTeam/new-job/releases/download/v1.0/lng-4.txt.gz), состоящий из строк вида 
 
 ```
 A1;B1;C1
@@ -144,7 +145,7 @@ A3;B3
 
 2. Если в группе две одинаковых строки - нужно оставить одну
 
-далее попробовать с большим .csv файлом: https://github.com/PeacockTeam/new-job/releases/download/v1.0/lng-big.7z
+далее попробовать с большим [.csv файлом](https://github.com/PeacockTeam/new-job/releases/download/v1.0/lng-big.7z)
 
 </details>
 
@@ -154,7 +155,7 @@ A3;B3
 
 Using Java:
 
-1. Read a file (https://github.com/PeacockTeam/new-job/releases/download/v1.0/lng-4.txt.gz) consisting of lines in the following format:
+1. Read a [file](https://github.com/PeacockTeam/new-job/releases/download/v1.0/lng-4.txt.gz) consisting of lines in the following format:
 
 ```
 A1;B1;C1
@@ -220,6 +221,6 @@ line3
 
 2. If there are duplicate lines in a group, only one should be retained.
 
-then try with a large .csv file: https://github.com/PeacockTeam/new-job/releases/download/v1.0/lng-big.7z
+then try with a large [.csv file](https://github.com/PeacockTeam/new-job/releases/download/v1.0/lng-big.7z)
 
 </details>
