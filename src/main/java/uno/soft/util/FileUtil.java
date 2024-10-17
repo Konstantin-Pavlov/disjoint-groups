@@ -77,25 +77,19 @@ public class FileUtil {
              InputStreamReader inputStreamReader = new InputStreamReader(gzipInputStream);
              BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
 
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                if (isValidLine(line)) {
-                    lines.add(line);
-                }
-            }
+            readLinesFromBufferedReader(bufferedReader, lines);
         }
         return lines;
     }
 
-
     /**
-     * Reads a text file and returns a list of valid lines.
+     * Reads a txt or CSV file and returns a list of valid lines.
      *
-     * @param filePath the path to the text file
+     * @param filePath the path to the txt or CSV file
      * @return a list of valid lines from the file
      * @throws IOException if an I/O error occurs while reading the file
      */
-    public static List<String> getLinesFromTxtFile(String filePath) throws IOException {
+    public static List<String> getLinesFromFile(String filePath) throws IOException {
         Path path = Paths.get(filePath);
         File file = path.toFile();
 
@@ -114,14 +108,25 @@ public class FileUtil {
              InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
              BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
 
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                if (isValidLine(line)) {
-                    lines.add(line);
-                }
-            }
+            readLinesFromBufferedReader(bufferedReader, lines);
         }
         return lines;
+    }
+
+    /**
+     * Reads lines from a BufferedReader and adds valid lines to the provided list.
+     *
+     * @param bufferedReader the BufferedReader to read lines from
+     * @param lines the list to which valid lines will be added
+     * @throws IOException if an I/O error occurs while reading from the BufferedReader
+     */
+    private static void readLinesFromBufferedReader(BufferedReader bufferedReader, List<String> lines) throws IOException {
+        String line;
+        while ((line = bufferedReader.readLine()) != null) {
+            if (isValidLine(line)) {
+                lines.add(line);
+            }
+        }
     }
 
     /**

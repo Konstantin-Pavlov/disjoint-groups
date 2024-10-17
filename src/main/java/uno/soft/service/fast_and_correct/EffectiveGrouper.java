@@ -98,13 +98,17 @@ public class EffectiveGrouper {
                 if (matchedGroupNumber != groupNumber) {
                     // If another group has matching elements, merge it with the current group.
                     unitedGroups.put(matchedGroupNumber, groupNumber); // Record the merge.
-                    linesGroups.get(groupNumber).addAll(linesGroups.get(matchedGroupNumber)); // Merge the two groups.
-                    linesGroups.set(matchedGroupNumber, null); // Mark the old group as null since it has been merged.
+                    if (linesGroups.get(matchedGroupNumber) != null && linesGroups.get(groupNumber) != null) {
+                        linesGroups.get(groupNumber).addAll(linesGroups.get(matchedGroupNumber)); // Merge the two groups.
+                        linesGroups.set(matchedGroupNumber, null); // Mark the old group as null since it has been merged.
+                    }
                 }
             }
 
             // Add the current line to its group.
-            linesGroups.get(groupNumber).add(line);
+            if (linesGroups.get(groupNumber) != null) {
+                linesGroups.get(groupNumber).add(line);
+            }
 
             // Update the progress tracker for every processed line.
             progressTracker.incrementProcessedLines();
