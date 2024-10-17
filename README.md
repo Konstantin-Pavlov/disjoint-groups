@@ -29,6 +29,10 @@
   ```
   java -jar target/disjoint-groups-1.0-SNAPSHOT.jar C:\Users\user\Desktop\java\lng.txt
   ```
+  - **With a .csv file path**: You can specify the path to a `.csv` file in the command-line arguments. Replace `C:\Users\user\Desktop\java\lng-big.csv` with your actual file path:
+  ```
+  java -jar target/disjoint-groups-1.0-SNAPSHOT.jar C:\Users\user\Desktop\java\lng-big.csv
+  ```
 
 - **Without command-line arguments**: If no file path is provided, the `.gz` archive will be automatically downloaded (and then processed)from the following link:
   ```
@@ -140,6 +144,8 @@ A3;B3
 
 2. Если в группе две одинаковых строки - нужно оставить одну
 
+далее попробовать с большим .csv файлом: https://github.com/PeacockTeam/new-job/releases/download/v1.0/lng-big.7z
+
 </details>
 
 
@@ -213,5 +219,7 @@ line3
   are invalid and should be skipped.
 
 2. If there are duplicate lines in a group, only one should be retained.
+
+then try with a large .csv file: https://github.com/PeacockTeam/new-job/releases/download/v1.0/lng-big.7z
 
 </details>
