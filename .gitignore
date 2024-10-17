@@ -1,6 +1,7 @@
 target/
 file
 allure-results
+effective_alg_explaining.md
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
