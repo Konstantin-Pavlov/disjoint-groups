@@ -1,8 +1,10 @@
 package uno.soft.util;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -114,10 +116,77 @@ public class FileUtil {
     }
 
     /**
+     * Writes groups of sortedGroups to a specified file. If the file does not exist, it will be created.
+     * If the file exists, its content will be overridden.
+     *
+     * @param fileName     the name of the file to write to
+     * @param sortedGroups the groups to write to the file
+     * @throws IOException if an I/O error occurs while writing to the file
+     */
+    public static void writeLinesToFile(
+            String fileName,
+            String numberOfLines,
+            String numberOfGroups,
+            String numberOfGroupsWithMoreThanOneElement,
+            List<List<String>> sortedGroups
+    ) throws IOException {
+        System.out.println("trying to write to file: " + fileName);
+        Path filePath = Paths.get(FILE_FOLDER, fileName);
+        File file = filePath.toFile();
+        if (!file.exists()) {
+            System.out.println("File not found, creating...");
+            if (file.createNewFile()) {
+                System.out.println("File created successfully.");
+            } else {
+                System.out.println("fail to create file.");
+            }
+        } else {
+            System.out.println("File already exists. Rewriting...");
+        }
+
+        fileCheck(file, filePath);
+
+        String text = String.format("printing %d groups", sortedGroups.size());
+        String border = "*".repeat(text.length() + 4);
+        String title = border + "\n* " + text + " *\n" + border;
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            printTitle(numberOfLines, numberOfGroups, numberOfGroupsWithMoreThanOneElement, writer, title);
+            int groupCounter = 1;
+            for (List<String> group : sortedGroups) {
+                writer.write(String.format("group number: %d | group size: %d", groupCounter++, group.size()));
+                writer.newLine();
+
+                for (String line : group) {
+                    writer.write(line);
+                    writer.newLine();
+                }
+
+                writer.write("\n" + "*".repeat(42) + "\n");
+                writer.newLine();
+            }
+        }
+        System.out.println("File written successfully.");
+    }
+
+    private static void printTitle(String numberOfLines, String numberOfGroups, String numberOfGroupsWithMoreThanOneElement, BufferedWriter writer, String title) throws IOException {
+        writer.write(numberOfLines);
+        writer.newLine();
+        writer.write(numberOfGroups);
+        writer.newLine();
+        writer.write(numberOfGroupsWithMoreThanOneElement);
+        writer.newLine();
+        writer.newLine();
+        writer.write(title);
+        writer.newLine();
+        writer.newLine();
+    }
+
+    /**
      * Reads lines from a BufferedReader and adds valid lines to the provided list.
      *
      * @param bufferedReader the BufferedReader to read lines from
-     * @param lines the list to which valid lines will be added
+     * @param lines          the list to which valid lines will be added
      * @throws IOException if an I/O error occurs while reading from the BufferedReader
      */
     private static void readLinesFromBufferedReader(BufferedReader bufferedReader, List<String> lines) throws IOException {

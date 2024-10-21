@@ -10,6 +10,7 @@ import java.lang.management.RuntimeMXBean;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main {
     public static void main(String[] args) {
@@ -62,15 +63,55 @@ public class Main {
 
         String formattedDuration = getFormattedDuration(duration);
 
-        System.out.println(ConsoleColors.ANSI_CYAN + "Execution time: " + formattedDuration + ConsoleColors.RESET); // Print formatted duration
-        System.out.println(ConsoleColors.ANSI_CYAN + "number of lines: " + lines.size() + ConsoleColors.RESET);
-        System.out.println(ConsoleColors.ANSI_CYAN + "number of groups total: " + groups.size() + ConsoleColors.RESET);
 
         long count = groups.stream()
                 .filter(group -> group.size() > 1)
                 .count();
 
-        System.out.println(ConsoleColors.ANSI_CYAN + "number of groups with more than one element: " + count + ConsoleColors.RESET);
+        String numberOfLines = "number of lines: " + lines.size();
+        String numberOfGroups = "number of groups total: " + groups.size();
+        String numberOfGroupsWithMoreThanOneElement = "number of groups with more than one element: " + count;
+
+        System.out.println(ConsoleColors.ANSI_CYAN + "Execution time: " + formattedDuration + ConsoleColors.RESET); // Print formatted duration
+        System.out.println(ConsoleColors.ANSI_CYAN + numberOfLines + ConsoleColors.RESET);
+        System.out.println(ConsoleColors.ANSI_CYAN + numberOfGroups + ConsoleColors.RESET);
+        System.out.println(ConsoleColors.ANSI_CYAN + numberOfGroupsWithMoreThanOneElement + ConsoleColors.RESET);
+
+        List<List<String>> sortedGroups = groups.stream()
+                .sorted((list1, list2) -> Integer.compare(list2.size(), list1.size()))
+                .toList();
+
+        printFirst25Groups(sortedGroups);
+
+        try {
+            FileUtil.writeLinesToFile(
+                    "output.txt",
+                    numberOfLines,
+                    numberOfGroups,
+                    numberOfGroupsWithMoreThanOneElement,
+                    sortedGroups);
+        } catch (IOException e) {
+            System.err.println(ConsoleColors.RED_BACKGROUND + "Error writing to file -> " + e.getMessage() + ConsoleColors.RESET);
+        }
+    }
+
+    private static void printFirst25Groups(List<List<String>> sortedGroups) {
+        printTitle();
+        AtomicInteger groupCounter = new AtomicInteger(0);
+        sortedGroups.stream()
+                .limit(25)
+                .forEach(group -> {
+                            System.out.println(ConsoleColors.PURPLE_BOLD + "group number: " + groupCounter.incrementAndGet() + " | group size: " + group.size() + ConsoleColors.RESET);
+                            group.forEach(line -> System.out.println(ConsoleColors.BLUE + line + ConsoleColors.RESET));
+                            System.out.println("\n" + ConsoleColors.GREEN + "*".repeat(42) + ConsoleColors.RESET + "\n");
+                        }
+                );
+    }
+
+    private static void printTitle() {
+        String border = "*".repeat("printing first 25 groups".length() + 4);
+        String title = border + "\n* " + "printing first 25 groups" + " *\n" + border;
+        System.out.println("\n" + ConsoleColors.GREEN_BOLD_BRIGHT + title + ConsoleColors.RESET + "\n");
     }
 
     private static String getFormattedDuration(long duration) {
@@ -83,4 +124,6 @@ public class Main {
         // Format the execution time
         return String.format("%02dh:%02dm:%02ds:%03dms", hours, minutes, seconds, milliseconds);
     }
+
 }
+
