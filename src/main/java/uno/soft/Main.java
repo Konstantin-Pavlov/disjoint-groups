@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-//todo - add output to file
 public class Main {
     public static void main(String[] args) {
 
@@ -64,22 +63,36 @@ public class Main {
 
         String formattedDuration = getFormattedDuration(duration);
 
-        System.out.println(ConsoleColors.ANSI_CYAN + "Execution time: " + formattedDuration + ConsoleColors.RESET); // Print formatted duration
-        System.out.println(ConsoleColors.ANSI_CYAN + "number of lines: " + lines.size() + ConsoleColors.RESET);
-        System.out.println(ConsoleColors.ANSI_CYAN + "number of groups total: " + groups.size() + ConsoleColors.RESET);
 
         long count = groups.stream()
                 .filter(group -> group.size() > 1)
                 .count();
 
-        System.out.println(ConsoleColors.ANSI_CYAN + "number of groups with more than one element: " + count + ConsoleColors.RESET);
+        String numberOfLines = "number of lines: " + lines.size();
+        String numberOfGroups = "number of groups total: " + groups.size();
+        String numberOfGroupsWithMoreThanOneElement = "number of groups with more than one element: " + count;
+
+        System.out.println(ConsoleColors.ANSI_CYAN + "Execution time: " + formattedDuration + ConsoleColors.RESET); // Print formatted duration
+        System.out.println(ConsoleColors.ANSI_CYAN + numberOfLines + ConsoleColors.RESET);
+        System.out.println(ConsoleColors.ANSI_CYAN + numberOfGroups + ConsoleColors.RESET);
+        System.out.println(ConsoleColors.ANSI_CYAN + numberOfGroupsWithMoreThanOneElement + ConsoleColors.RESET);
 
         List<List<String>> sortedGroups = groups.stream()
                 .sorted((list1, list2) -> Integer.compare(list2.size(), list1.size()))
                 .toList();
 
-
         printFirst25Groups(sortedGroups);
+
+        try {
+            FileUtil.writeLinesToFile(
+                    "output.txt",
+                    numberOfLines,
+                    numberOfGroups,
+                    numberOfGroupsWithMoreThanOneElement,
+                    sortedGroups);
+        } catch (IOException e) {
+            System.err.println(ConsoleColors.RED_BACKGROUND + "Error writing to file -> " + e.getMessage() + ConsoleColors.RESET);
+        }
     }
 
     private static void printFirst25Groups(List<List<String>> sortedGroups) {
