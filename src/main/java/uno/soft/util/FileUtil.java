@@ -133,6 +133,14 @@ public class FileUtil {
         System.out.println("trying to write to file: " + fileName);
         Path filePath = Paths.get(FILE_FOLDER, fileName);
         File file = filePath.toFile();
+
+        if (!Files.exists(filePath.getParent())) {
+            System.out.printf("directory %s doesn't exist, creating...\n", filePath);
+            Files.createDirectories(filePath.getParent());
+        } else {
+            System.out.printf("directory %s already exists, skipping...\n", filePath);
+        }
+
         if (!file.exists()) {
             System.out.println("File not found, creating...");
             if (file.createNewFile()) {
